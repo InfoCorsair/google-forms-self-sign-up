@@ -2,8 +2,10 @@ const SETTINGS_SHEET_NAME = 'Settings';
 const PACKAGE_MAPPINGS_SHEET_NAME = 'Package mappings';
 const FIELD_MAPPINGS_SHEET_NAME = 'Field mappings';
 const GENDER_MAPPINGS_SHEET_NAME = 'Gender mappings';
+const THREED_PRINTEROS_SHEET_NAME = '3dpos mappings';
 
 const SETTINGS_VALUE_COLUMN = 2;
+const THREED_PRINTEROS_VALUE_COLUMN = 2;
 
 const FIELD_MAPPINGS_FORM_COLUMN = 1;
 const FIELD_MAPPINGS_API_COLUMN = 2;

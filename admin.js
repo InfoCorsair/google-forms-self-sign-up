@@ -1,5 +1,6 @@
 const MENU_ITEM_UPDATE_FROM_FORM_TITLE = 'Update data from Google Forms';
 const MENU_ITEM_UPDATE_FROM_FABMAN_TITLE = 'Update data from Fabman';
+const MENU_ITEM_UPDATE_FROM_FABMAN_TITLE = 'Update data from 3DPrinterOS';
 
 function onInstall(e) {
     Logger.log(`On install: ${JSON.stringify(e)}`);
@@ -287,6 +288,22 @@ function create_gender_mappings_sheet(name) {
     sheet.autoResizeColumn(2);
 }
 
+function create_3dpos_sheet(name){
+	const spreadsheet = SpreadsheetApp.getActive();
+	const sheet = spreadsheet.insertSheet(name);
+	{
+		const range = sheet.getRange(1, 1, 1, 1, 1);
+		range.setValue('Form option name');
+		range.setFontWeight('bold');
+	}
+	{
+		const range = sheet.getRange(1, THREED_PRINTEROS_VALUE_COLUMN, 1, 1);
+		range.setValue('Value');
+		range.setFontWeight('bold');
+	}
+	sheet.autoResizeColumn(1);
+	sheet.autoResizeColumn(2);
+}
 
 function update_field_mappings_sheet() {
     const form_sheet = get_form_data_sheet();
@@ -551,6 +568,8 @@ function update_gender_mappings_sheet(create_if_missing) {
     mappings_sheet.autoResizeColumn(2);
 }
 
+//Defines the behavior of the 3DPrinterOS spreadsheet
+function update_3dpos_mappings();
 
 function validate_settings() {
     const api_key = get_or_ask_for_api_key();
