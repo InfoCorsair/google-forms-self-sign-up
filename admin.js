@@ -222,23 +222,23 @@ function create_settings_sheet(name) {
         const range = sheet.getRange(2, SETTINGS_VALUE_COLUMN, 1, 1);
         range.setNote('Please sign in to your Fabman account, create an API key, and paste the access token into this cell. For more information on how to create API keys, go to https://help.fabman.io/article/80-api-key');
     }
-		//3DPrinterOS settings rows added to settings sheet
-		{
-			const range = sheet.getRange(3, 1, 1, 1);
-			range.setValue('3DPrinterOS Username');		
-		}
-		{
-			const range = sheet.getRange(3, SETTINGS_VALUE_COLUMN, 1, 1);
-			range.setNote('Enter your 3DPrinterOS username/email');
-		}
-		{
-			const range.getRange(4, 1, 1, 1);
-			range.setValue('3DPrinterOS Password');
-		}
-		{
-			const range = sheet.getRange(4, SETTINGS_VALUE_COLUMN, 1, 1);
-			range.setNote('Enter your 3DPrinterOS Password');
-		}
+	//3DPrinterOS rows added to settings spreadsheet
+    {
+	const range = sheet.getRange(3, 1, 1, 1);
+	range.setValue('3DPrinterOS Username');		
+    }
+    {
+	const range = sheet.getRange(3, SETTINGS_VALUE_COLUMN, 1, 1);
+	range.setNote('Enter your 3DPrinterOS username/email');
+    }
+    {
+	const range.getRange(4, 1, 1, 1);
+	range.setValue('3DPrinterOS Password');
+    }
+    {
+	const range = sheet.getRange(4, SETTINGS_VALUE_COLUMN, 1, 1);
+	range.setNote('Enter your 3DPrinterOS Password');
+    }
 
     sheet.autoResizeColumn(1);
 
@@ -309,17 +309,23 @@ function create_3dpos_sheet(name){
 	const spreadsheet = SpreadsheetApp.getActive();
 	const sheet = spreadsheet.insertSheet(name);
 	{
-		const range = sheet.getRange(1, 1, 1, 1, 1);
-		range.setValue('Form option name');
+		const range = sheet.getRange(1, 1, 1, 1);
+		range.setValue('Email');
 		range.setFontWeight('bold');
 	}
 	{
-		const range = sheet.getRange(1, THREED_PRINTEROS_VALUE_COLUMN, 1, 1);
-		range.setValue('Value');
+		const range = sheet.getRange(1, 2, 1, 1);
+		range.setValue('Created at');
+		range.setFontWeight('bold');
+	}
+	{
+		const range = sheet.getRange(1, 3, 1, 1,);
+		range.setValue('Source');
 		range.setFontWeight('bold');
 	}
 	sheet.autoResizeColumn(1);
 	sheet.autoResizeColumn(2);
+	sheet.autoResizeColumn(3);
 }
 
 function update_field_mappings_sheet() {
