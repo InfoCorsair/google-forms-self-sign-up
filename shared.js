@@ -200,6 +200,79 @@ function get_field_map() {
     return mapping;
 }
 
+	function get_3dpos_username() {
+		const sheet = get_sheet(SETTINGS_SHEET_NAME);
+		const range = sheet.getRange(3, SETTINGS_VALUE_COLUMN, 1, 1);
+		return range.getValue();
+	}
+
+	function get_3dpos_password() {
+		const sheet = get_sheet(SETTINGS_SHEET_NAME);
+		const range = sheet.getRange(4, SETTINGS_VALUE_COLUMN, 1, 1);
+		return range.getValue();
+	}
+
+	function get_3dpos_login_session() {
+		const username get_3dpos_username;
+		const password = get_3dpos_password;
+
+		if (!username || !password){
+			throw new Error('3DPrinterOS credentials not configured in the Settings google sheet');
+		}
+		const login_url = 'https://acorn.3dprinteros.com/apiglobal/login';
+		const payload = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+
+		Logger.log(`Logging into 3DPrinterOS...`);
+		const response = URIFetchApp.fetch(login_url, {
+			method: 'post',
+			contentType: 'application/x-www-form-urlencoded',
+			payload: payload,
+			muteHttpExceptions: true
+		});
+
+		const data = JSON.parse(response.getContentText());
+		if(!data.result){
+			throw new Error(`3DPrinterOS login failed: ${data.message}`);
+		}
+		Logger.log('3DPrinterOS login successful');
+		return data.message.session;
+	}
+
+	function create_3dpos_user(member_data){
+		const session = get_3dpos_login_session;
+
+		let payload_components = [
+			`session=${encodeURIComponent(session)}`,
+			`email=${encodeURIComponent(member_data.emailAddress)}`,
+			`gdpr=3`
+		];
+
+		if (member_data.firstName) {
+			payload_components.push(`firstname=${encodeURIComponent(member_data.firstName)}`);
+		}
+		if (member_data.lastName){
+			payload_components.push(`lastname=${encodeURIComponent(member_data.lastName)}`);
+		}
+		if (member_data.company){
+			payload_components.push(`company=${encodeURIComponent(member_data.company)}`);
+		}
+		const payload = payload_components.join('&');
+		const create_url = 'https://acorn.3dprinteros.com/apiglobal/create_organization_user';
+
+		Logger.log(`Creating 3DPrinterOS user for ${member_data.emailAddress}...`);
+		const response = URIFetchApp.fetch(create_url, {
+			method: 'post',
+			contentType: 'application/x-www-form-urlencoded',
+			payload: payload,
+			muteHttpExceptions: true
+		});
+		const data = JSON.parse(response.getContentText());
+		if(!data.result){
+			throw new Error(`3DPrinterOS user failed to be created: ${data.message}`);
+		}
+		Logger.log(`3DPrinterOS user creation successful`);
+		return data;
+	}
 const API_FIELDS = {
     // @ToDo: Maybe add support for mapping the space name. :MultipleSpaces
     'ignore': null,
