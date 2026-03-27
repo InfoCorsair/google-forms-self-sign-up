@@ -1,6 +1,6 @@
 const MENU_ITEM_UPDATE_FROM_FORM_TITLE = 'Update data from Google Forms';
 const MENU_ITEM_UPDATE_FROM_FABMAN_TITLE = 'Update data from Fabman';
-const MENU_ITEM_UPDATE_FROM_FABMAN_TITLE = 'Update data from 3DPrinterOS';
+//const MENU_ITEM_UPDATE_FROM_3DPRINTEROS_TITLE = 'Update data from 3DPrinterOS';
 
 function onInstall(e) {
     Logger.log(`On install: ${JSON.stringify(e)}`);
@@ -222,6 +222,23 @@ function create_settings_sheet(name) {
         const range = sheet.getRange(2, SETTINGS_VALUE_COLUMN, 1, 1);
         range.setNote('Please sign in to your Fabman account, create an API key, and paste the access token into this cell. For more information on how to create API keys, go to https://help.fabman.io/article/80-api-key');
     }
+		//3DPrinterOS settings rows added to settings sheet
+		{
+			const range = sheet.getRange(3, 1, 1, 1);
+			range.setValue('3DPrinterOS Username');		
+		}
+		{
+			const range = sheet.getRange(3, SETTINGS_VALUE_COLUMN, 1, 1);
+			range.setNote('Enter your 3DPrinterOS username/email');
+		}
+		{
+			const range.getRange(4, 1, 1, 1);
+			range.setValue('3DPrinterOS Password');
+		}
+		{
+			const range = sheet.getRange(4, SETTINGS_VALUE_COLUMN, 1, 1);
+			range.setNote('Enter your 3DPrinterOS Password');
+		}
 
     sheet.autoResizeColumn(1);
 
