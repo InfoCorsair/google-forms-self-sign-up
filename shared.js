@@ -213,8 +213,8 @@ function get_3dpos_password() {
 }
 
 function get_3dpos_login_session() {
-	const username get_3dpos_username;
-	const password = get_3dpos_password;
+	const username = get_3dpos_username();
+	const password = get_3dpos_password();
 
 	if (!username || !password){
 		throw new Error('3DPrinterOS credentials not configured in the Settings google sheet');
@@ -223,7 +223,7 @@ function get_3dpos_login_session() {
 	const payload = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
 
 	Logger.log(`Logging into 3DPrinterOS...`);
-	const response = URIFetchApp.fetch(login_url, {
+	const response = UrlFetchApp.fetch(login_url, {
 		method: 'post',
 		contentType: 'application/x-www-form-urlencoded',
 		payload: payload,
@@ -239,7 +239,7 @@ function get_3dpos_login_session() {
 }
 
 function create_3dpos_user(member_data){
-	const session = get_3dpos_login_session;
+	const session = get_3dpos_login_session();
 
 	let payload_components = [
 		`session=${encodeURIComponent(session)}`,
@@ -260,7 +260,7 @@ function create_3dpos_user(member_data){
 	const create_url = 'https://acorn.3dprinteros.com/apiglobal/create_organization_user';
 
 	Logger.log(`Creating 3DPrinterOS user for ${member_data.emailAddress}...`);
-	const response = URIFetchApp.fetch(create_url, {
+	const response = UrlFetchApp.fetch(create_url, {
 		method: 'post',
 		contentType: 'application/x-www-form-urlencoded',
 		payload: payload,

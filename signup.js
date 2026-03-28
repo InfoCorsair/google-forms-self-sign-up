@@ -103,18 +103,19 @@ function on_form_submitted(e) {
 			.setLinkUrl(`https://fabman.io/manage/${member.account}/members/${member.id}`)
 			.build();
 		statusRange.setRichTextValue(resultValue);
+
+		try{
+			create_3dpos_user(member_data);
+			const timestamp = Utilities.formatDate(new Date(), member_space.timezone || "UTC", "yyyy-MM-dd HH:mm:ss");
+			write_to_3dpos_sheet(member_data.emailAddress, timestamp, range.getRow());
+			Logger.log(`3DPrinterOS account created for ${member_data.emailAddress}`);
+		} catch(e){
+			Logger.log(`3DPrinterOS account creation failed: ${e.toString()}`);
+			//Don't fail the whole process if 3DPOS fails
+		}
 	} catch (e) {
 		statusRange.setValue(`Error occurred while trying to create the member:\n${e.toString()}`);
 		throw e;
-	}
-	try{
-		create_3dpos_user(member_data);
-		const timestamp = Utilities.formatDate(new Date(), member_space.timezone || "UTC", "yyy-MM-dd HH:mm:ss");
-		write_to_3dpos_sheet(member_data.emailAddress, timestamp, range.getRow());
-		Logger.log(`3DPrinterOS account created for ${member_data.emailAddress}`);
-	} catch(e){
-		Logger.log(`3DPrinterOS account creation failed: ${e.toString()}`);
-		//Don't fail the whole process if 3DPOS fails
 	}
 }
 

@@ -232,7 +232,7 @@ function create_settings_sheet(name) {
 	range.setNote('Enter your 3DPrinterOS username/email');
     }
     {
-	const range.getRange(4, 1, 1, 1);
+	const range = sheet.getRange(4, 1, 1, 1);
 	range.setValue('3DPrinterOS Password');
     }
     {
@@ -319,7 +319,7 @@ function create_3dpos_sheet(name){
 		range.setFontWeight('bold');
 	}
 	{
-		const range = sheet.getRange(1, 3, 1, 1,);
+		const range = sheet.getRange(1, 3, 1, 1);
 		range.setValue('Source');
 		range.setFontWeight('bold');
 	}
