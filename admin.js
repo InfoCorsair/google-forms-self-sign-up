@@ -592,7 +592,7 @@ function update_gender_mappings_sheet(create_if_missing) {
 }
 
 //Defines the behavior of the 3DPrinterOS spreadsheet
-function update_3dpos_mappings();
+//function update_3dpos_mappings();
 
 function validate_settings() {
     const api_key = get_or_ask_for_api_key();
