@@ -1,6 +1,5 @@
 const MENU_ITEM_UPDATE_FROM_FORM_TITLE = 'Update data from Google Forms';
 const MENU_ITEM_UPDATE_FROM_FABMAN_TITLE = 'Update data from Fabman';
-//const MENU_ITEM_UPDATE_FROM_3DPRINTEROS_TITLE = 'Update data from 3DPrinterOS';
 
 function onInstall(e) {
     Logger.log(`On install: ${JSON.stringify(e)}`);
@@ -222,21 +221,21 @@ function create_settings_sheet(name) {
         const range = sheet.getRange(2, SETTINGS_VALUE_COLUMN, 1, 1);
         range.setNote('Please sign in to your Fabman account, create an API key, and paste the access token into this cell. For more information on how to create API keys, go to https://help.fabman.io/article/80-api-key');
     }
-	//3DPrinterOS rows added to settings spreadsheet
+	//3DPrinterOS admin information is kept in the settings google sheet
     {
-	const range = sheet.getRange(3, 1, 1, 1);
-	range.setValue('3DPrinterOS Username');		
+	const range = sheet.getRange(3, 1, 1, 1);//sets the row and column position, so row 3 column 1 in this case
+	range.setValue('3DPrinterOS Username/Email');//inserts this text into the row and column position defined above
     }
     {
-	const range = sheet.getRange(3, SETTINGS_VALUE_COLUMN, 1, 1);
+	const range = sheet.getRange(3, SETTINGS_VALUE_COLUMN, 1, 1);//SETTINGS_VALUE_COLUMN is equal to 2, so row 3 column 2
 	range.setNote('Enter your 3DPrinterOS username/email');
     }
     {
-	const range = sheet.getRange(4, 1, 1, 1);
+	const range = sheet.getRange(4, 1, 1, 1);//row 4 column 1
 	range.setValue('3DPrinterOS Password');
     }
     {
-	const range = sheet.getRange(4, SETTINGS_VALUE_COLUMN, 1, 1);
+	const range = sheet.getRange(4, SETTINGS_VALUE_COLUMN, 1, 1);//row 4 column 2
 	range.setNote('Enter your 3DPrinterOS Password');
     }
 
@@ -305,22 +304,23 @@ function create_gender_mappings_sheet(name) {
     sheet.autoResizeColumn(2);
 }
 
+//This function defines the 3DPrinterOS Google Sheet configuration
 function create_3dpos_sheet(name){
 	const spreadsheet = SpreadsheetApp.getActive();
 	const sheet = spreadsheet.insertSheet(name);
 	{
-		const range = sheet.getRange(1, 1, 1, 1);
+		const range = sheet.getRange(1, 1, 1, 1);//consider variable declarations of grid position and size values(?)
 		range.setValue('Email');
 		range.setFontWeight('bold');
 	}
 	{
 		const range = sheet.getRange(1, 2, 1, 1);
-		range.setValue('Created at');
+		range.setValue('Date/Time Created');
 		range.setFontWeight('bold');
 	}
 	{
 		const range = sheet.getRange(1, 3, 1, 1);
-		range.setValue('Source');
+		range.setValue('Sheet Source');
 		range.setFontWeight('bold');
 	}
 	sheet.autoResizeColumn(1);
@@ -590,9 +590,6 @@ function update_gender_mappings_sheet(create_if_missing) {
     mapping_value_range.setDataValidation(validation_rule);
     mappings_sheet.autoResizeColumn(2);
 }
-
-//Defines the behavior of the 3DPrinterOS spreadsheet
-//function update_3dpos_mappings();
 
 function validate_settings() {
     const api_key = get_or_ask_for_api_key();
