@@ -5,7 +5,8 @@
   "runtimeVersion": "V8",
   "urlFetchWhitelist": [
     "https://fabman.io/api/v1",
-    "https://internal.fabman.io/api/v1"
+    "https://internal.fabman.io/api/v1",
+    "https://cloud.3dprinteros.com/"
   ],
   "oauthScopes": [
     "https://www.googleapis.com/auth/spreadsheets.currentonly",
