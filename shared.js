@@ -51,6 +51,8 @@ function get_form() {
 	}
 }
 
+//helper function that returns the sheet to be created if it exists, or conditionally, such that if it doesn't exist but the create_function for it does, then return it
+//Otherwise, throw an error because the sheet and create_function doesn't exist
 function get_sheet(name, create_function, optional) {
 	const spreadsheet = SpreadsheetApp.getActive();
 	let sheet = spreadsheet.getSheetByName(name);
@@ -200,12 +202,14 @@ function get_field_map() {
 	return mapping;
 }
 
+//function to find the 3dpos username stored in the Settings Spreadsheet and return its value
 function get_3dpos_username() {
 	const sheet = get_sheet(SETTINGS_SHEET_NAME);
 	const range = sheet.getRange(3, SETTINGS_VALUE_COLUMN, 1, 1);
 	return range.getValue();
 }
 
+//function to find the 3dpos password stored in the Settings Spreadsheet and return its value
 function get_3dpos_password() {
 	const sheet = get_sheet(SETTINGS_SHEET_NAME);
 	const range = sheet.getRange(4, SETTINGS_VALUE_COLUMN, 1, 1);
@@ -219,7 +223,7 @@ function get_3dpos_login_session() {
 	if (!username || !password){
 		throw new Error('3DPrinterOS credentials not configured in the Settings google sheet');
 	}
-	const login_url = 'https://acorn.3dprinteros.com/apiglobal/login';
+	const login_url = 'https://cloud.3dprinteros.com/apiglobal/login';
 	const payload = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
 
 	Logger.log(`Logging into 3DPrinterOS...`);
@@ -240,6 +244,8 @@ function get_3dpos_login_session() {
 
 function create_3dpos_user(member_data){
 	const session = get_3dpos_login_session();
+	const account_exists = false;
+	const new_account = true;
 
 	let payload_components = [
 		`session=${encodeURIComponent(session)}`,
@@ -257,7 +263,7 @@ function create_3dpos_user(member_data){
 		payload_components.push(`company=${encodeURIComponent(member_data.company)}`);
 	}
 	const payload = payload_components.join('&');
-	const create_url = 'https://acorn.3dprinteros.com/apiglobal/create_organization_user';
+	const create_url = 'https://cloud.3dprinteros.com/apiglobal/create_organization_user';
 
 	Logger.log(`Creating 3DPrinterOS user for ${member_data.emailAddress}...`);
 	const response = UrlFetchApp.fetch(create_url, {
@@ -268,10 +274,14 @@ function create_3dpos_user(member_data){
 	});
 	const data = JSON.parse(response.getContentText());
 	if(!data.result){
+		if(data.message == "User already exists"){
+			Logger.log(`Message from create_3dpos_user() -> A 3DPrinterOS account already exists for this email: "${member_data.emailAddress}"`);
+			return account_exists;
+		}
 		throw new Error(`3DPrinterOS user failed to be created: ${data.message}`);
 	}
 	Logger.log(`3DPrinterOS user creation successful`);
-	return data;
+	return new_account;
 }
 
 function write_to_3dpos_sheet(email, timestamp, row_number){
@@ -283,7 +293,7 @@ function write_to_3dpos_sheet(email, timestamp, row_number){
 
 	sheet.getRange(new_row, 1, 1, 1).setValue(email);
 	sheet.getRange(new_row, 2, 1, 1).setValue(timestamp);
-	sheet.getRange(new_row, 3, 1, 1).setValue(`Form Row ${row_number}`);
+	sheet.getRange(new_row, 3, 1, 1).setValue(`Check 'Form Responses' -> Row ${row_number}`);
 }
 
 const API_FIELDS = {

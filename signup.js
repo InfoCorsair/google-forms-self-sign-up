@@ -105,10 +105,15 @@ function on_form_submitted(e) {
 		statusRange.setRichTextValue(resultValue);
 
 		try{
-			create_3dpos_user(member_data);
+			const success = create_3dpos_user(member_data);
 			const timestamp = Utilities.formatDate(new Date(), member_space.timezone || "UTC", "yyyy-MM-dd HH:mm:ss");
 			write_to_3dpos_sheet(member_data.emailAddress, timestamp, range.getRow());
-			Logger.log(`3DPrinterOS account created for ${member_data.emailAddress}`);
+			if(success == false){
+				Logger.log(`Message from function on_form_submitted -> 3DPrinterOS account already exists for "${member_data.emailAddress}"`);
+			}
+			else{
+				Logger.log(`3DPrinterOS account created for ${member_data.emailAddress}`);
+			}
 		} catch(e){
 			Logger.log(`3DPrinterOS account creation failed: ${e.toString()}`);
 			//Don't fail the whole process if 3DPOS fails
